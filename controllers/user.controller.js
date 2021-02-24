@@ -1,12 +1,18 @@
 const db = require('../models')
 const User = db.users
 const _ = require('lodash')
+const jwt = require("jsonwebtoken")
 
 //create user
 function registerUser (req, res, next) {
     User.create(req.body)
         .then( (data) => {
-            res.status(200).send(data)
+            let payload = {
+                id: data.id,
+                username: data.username
+            }
+            const token = jwt.sign(payload, process.env.JWT_TOKEN)
+            res.status(200).send({data, token})
         })
         .catch( (err)=> {
             if(err.name == 'SequelizeUniqueConstraintError'){

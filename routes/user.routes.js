@@ -1,13 +1,15 @@
 const router = require('express').Router()
 const userController = require('../controllers/user.controller')
+const joiMiddleware = require("../middlewares/joiValidator")
+const jwtMiddleware = require("../middlewares/jwtAuth")
 
 // const { registerUser,findAll,findOne,update,delete: _delete} = require('../controllers/user.controller')
 
 //create tweet
-router.post('/register', userController.registerUser)
+router.post('/register', joiMiddleware, userController.registerUser)
 
 //findall
-router.get('/users', userController.findAll)
+router.get('/users', jwtMiddleware, userController.findAll)
 
 //getone
 router.get('/:id', userController.findOne)
